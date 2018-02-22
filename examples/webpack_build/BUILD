@@ -26,6 +26,7 @@ mocha_test(
         'test/*.spec.js'
     ]),
     deps = [
-        '@org_dropbox_rules_node//node/dbx-bazel-utils'
+        '@org_dropbox_rules_node//node/dbx-bazel-utils',
+        '//examples/webpack_build'
     ],
 )

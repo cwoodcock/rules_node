@@ -13,17 +13,19 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.{t,j}sx?$/,
+        test: /\.(t,j)sx?$/,
         loader: 'ts-loader',
       },
     ],
   },
 
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
     modules: [
       path.resolve(__dirname, "src"),
       path.resolve(__dirname, "node_modules"),
+      path.resolve(__dirname, "node_modules/react/node_modules"),
+      path.resolve(__dirname, "node_modules/react-dom/node_modules"),
     ],
   },
 }

@@ -1,7 +1,5 @@
-import {stuff} from 'stuff';
-import * as im from 'internal_module';
-import * as r from 'react/dist/react';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import App from './components/App/';
 
-export function someStuff() {
-  return '3' + stuff + im;
-}
+ReactDOM.render(React.createElement(App), document.getElementById('root'));

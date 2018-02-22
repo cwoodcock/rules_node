@@ -1,0 +1,11 @@
+{
+  "name": "npm-gen-jsdom-global",
+  "version": "3.0.2",
+  "dependencies": {
+    "jsdom-global": {
+      "version": "3.0.2",
+      "from": "jsdom-global@3.0.2",
+      "resolved": "https://registry.npmjs.org/jsdom-global/-/jsdom-global-3.0.2.tgz"
+    }
+  }
+}

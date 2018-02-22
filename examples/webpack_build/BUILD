@@ -1,6 +1,6 @@
 package(default_visibility = ['//visibility:public'])
 
-load('//node:defs.bzl', 'webpack_build', 'mocha_test')
+load('//node:defs.bzl', 'webpack_build', 'mocha_test', 'node_library')
 
 webpack_build(
     name = 'webpack_build',
@@ -20,13 +20,29 @@ webpack_build(
     ],
 )
 
+node_library(
+    name = 'app',
+    srcs = ['src/components/App/index.ts'],
+)
+
 mocha_test(
     name = 'mocha_test',
     srcs = glob([
-        'test/*.spec.js'
+        'src/**/*.spec.ts',
+        'test/*.spec.ts',
     ]),
+    extra_args = ['--require=ts-node/register'],
     deps = [
-        '//node/dbx-bazel-utils',
-        '//examples/webpack_build'
+        '//examples/npm/typescript',
+        '//examples/npm/ts-node',
+        '//examples/npm/react',
+        '//examples/npm/react-dom',
+        '//examples/npm/jsdom',
+        '//examples/npm/jsdom-global',
+        '//examples/npm/enzyme',
+        '//examples/npm/react-test-renderer',
+        '//examples/npm/enzyme-adapter-react-15',
+        '//examples/internal_module',
+        ':app',
     ],
 )

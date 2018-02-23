@@ -907,9 +907,9 @@ def node_repositories(omit_nodejs=False):
     if not omit_nodejs:
         native.new_http_archive(
             name = "nodejs",
-            url = "https://nodejs.org/dist/v6.11.1/node-v6.11.1-linux-x64.tar.xz",
-            type = "tar.xz",
-            strip_prefix = "node-v6.11.1-linux-x64",
-            sha256 = "e68cc956f0ca5c54e7f3016d639baf987f6f9de688bb7b31339ab7561af88f41",
+            url = "https://nodejs.org/dist/v6.11.1/node-v6.11.1-darwin-x64.tar.gz",
+            type = "tar.gz",
+            strip_prefix = "node-v6.11.1-darwin-x64",
+            sha256 = "a2b839259089ef26f20c17864ff5ce9cd1a67e841be3d129b38d288b45fe375b",
             build_file_content = NODEJS_BUILD_FILE_CONTENT,
         )

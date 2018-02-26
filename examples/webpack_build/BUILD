@@ -1,11 +1,11 @@
 package(default_visibility = ['//visibility:public'])
 
-load('//node:defs.bzl', 'webpack_build', 'mocha_test', 'node_library')
+load('//node:defs.bzl', 'webpack_build', 'mocha_test', 'node_library', 'node_binary')
 
 webpack_build(
     name = 'webpack_build',
     srcs = glob([
-        'src/*.ts',
+        'src/**/*.ts',
         'tsconfig.json',
     ]),
     outs = ['bundle.js'],
@@ -44,5 +44,21 @@ mocha_test(
         '//examples/npm/enzyme-adapter-react-15',
         '//examples/internal_module',
         ':app',
+    ],
+)
+
+node_binary(
+    name = 'dev',
+    srcs = [
+        'statics/index.html',
+        'test/dev/server.js',
+    ],
+    main = 'test/dev/server.js',
+    deps = [
+        '//examples/npm/express',
+        ':webpack_build',
+    ],
+    tags = [
+        'ibazel_notify_changes',
     ],
 )

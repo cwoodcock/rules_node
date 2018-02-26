@@ -10,7 +10,7 @@ const {mount} = Enzyme;
 Enzyme.configure({adapter: new Adapter()});
 
 describe('App', () => {
-  it('should pass', () => {
+  it('should render hello inside App component', () => {
     const wrapper = mount(React.createElement(App));
     expect(wrapper.text()).to.equal('hello there');
   });

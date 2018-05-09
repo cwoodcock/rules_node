@@ -28,6 +28,7 @@ load('@org_dropbox_rules_node//node:defs.bzl', %s)
 class NpmBuildGeneratorException(Exception):
     pass
 
+
 def encode_npm_name(name):
     '''
     Encode `name` so that it's a valid npm package name, and so that
@@ -35,8 +36,10 @@ def encode_npm_name(name):
     '''
     return 'npm-gen-' + name.replace('/', '-').replace('@', 'at_')
 
+
 def get_npm_library_contents(target_dir, npm_req):
-    ''' Return a list of the contents of the npm module and its dependencies.  '''
+    ''' Return a list of the contents of the npm module and its dependencies.
+    '''
     name = get_dep_name(npm_req)
     version = get_dep_version(npm_req)
 
@@ -57,8 +60,8 @@ def get_npm_library_contents(target_dir, npm_req):
 
         # True if the name and version match.
         shrinkwrap_is_valid = repo_shrinkwrap_data and \
-                              (repo_shrinkwrap_data['name'] == encode_npm_name(name)) and \
-                              (repo_shrinkwrap_data['version'] == version)
+            (repo_shrinkwrap_data['name'] == encode_npm_name(name)) and \
+            (repo_shrinkwrap_data['version'] == version)
 
     tmpdir = mkdtemp(suffix='gen_build_npm')
 
@@ -109,9 +112,12 @@ def get_npm_library_contents(target_dir, npm_req):
         with open(module_package_json, 'r') as f:
             module_package_data = json.load(f)
 
-        # Walk the module's directory looking for all the package.json
-        # files, so we also remove the peer dependencies of the package's dependencies.
-        for root, dirs, files in os.walk(os.path.join(tmpdir, 'node_modules', name)):
+        # Walk the module's directory looking for all the package.json files,
+        # so we also remove the peer dependencies of the package's
+        # dependencies.
+        for root, dirs, files in os.walk(
+            os.path.join(tmpdir, 'node_modules', name)
+        ):
             for fname in files:
                 if fname == 'package.json':
                     package_json_path = os.path.join(root, fname)
@@ -140,6 +146,9 @@ def get_npm_library_contents(target_dir, npm_req):
     node_modules_dir = os.path.join(tmpdir, 'node_modules', '')
     assert os.path.isdir(node_modules_dir)
     contents = []
+    warnStr = """WARNING: Not including file %s because it contains
+    whitespace.  This is usually safe because these files are usually only for
+    tests.\nTarget: //%s"""
     for root, dirs, files in os.walk(node_modules_dir):
         relative_root = root[len(node_modules_dir):]
         if relative_root:
@@ -150,9 +159,7 @@ def get_npm_library_contents(target_dir, npm_req):
             # time, these are just in test files so they're okay
             # to exclude.
             if " " in filename:
-                print "WARNING: Not including file %s because it contains whitespace. " \
-                    "This is usually safe because these files are usually only for " \
-                    "tests. Target: //%s " % (relative_root + filename, target_dir)
+                print warnStr % (relative_root + filename, target_dir)
                 continue
 
             contents.append(relative_root + filename)
@@ -162,6 +169,7 @@ def get_npm_library_contents(target_dir, npm_req):
 
     contents.sort()
     return contents
+
 
 def create_build_file(target_dir, npm_rule, contents):
     output = [LOAD_STATEMENT]
@@ -207,35 +215,43 @@ def generate_build_file_and_shrinkwrap(npm_req, output):
     name = get_dep_name(npm_req)
 
     npm_rule = BazelRule(
-        attr_map = {
+        attr_map={
             'name': name,
             'contents': contents,
             'npm_req': npm_req,
             'shrinkwrap': SHRINKWRAP,
         },
-        rule_type = 'npm_library',
+        rule_type='npm_library',
     )
 
     create_build_file(output, npm_rule, contents)
 
 
 def main():
+
     parser = argparse.ArgumentParser(
         description="Generate BUILD and shrinkwrap files for npm modules",
     )
+
     parser.add_argument("npm_req",
-                        help="npm_req for the module you want to add (e.g. `module@1.2.3`)",
-                        type=str)
+                        help="""npm_req for the module you want to add (e.g.
+                        `module@1.2.3`)""",
+                        type=str
+                        )
+
     parser.add_argument("output",
-                        help="""Directory to put the BUILD file in. NOTE: You should pass
-                        an absolute path (e.g ~/path/to/dir) if you're calling this tool
-                        using `bazel run`, because `bazel run` sets the working directory to
-                        the runfiles dir.""",
-                        type=str)
+                        help="""Directory to put the BUILD file in. NOTE: You
+                        should pass an absolute path (e.g ~/path/to/dir) if
+                        you're calling this tool using `bazel run`, because
+                        `bazel run` sets the working directory to the runfiles
+                        dir.""",
+                        type=str
+                        )
 
     args = parser.parse_args()
 
     generate_build_file_and_shrinkwrap(args.npm_req, args.output)
+
 
 if __name__ == '__main__':
     main()

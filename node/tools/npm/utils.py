@@ -1,6 +1,7 @@
+import json
 import os
-import sys
 import subprocess
+import sys
 
 from node.tools.npm.runfiles import data_path
 
@@ -14,24 +15,31 @@ NPM_PATH = data_path('@nodejs//bin/npm')
 class NodeToolsException(Exception):
     pass
 
+
 def get_dep_id(dep_name, dep_version):
     return '%s@%s' % (dep_name, dep_version)
+
 
 def get_dep_name(dep_id):
     assert '@' in dep_id
     return dep_id.rsplit('@', 1)[0]
 
+
 def get_dep_version(dep_id):
     assert '@' in dep_id
     return dep_id.split('@')[-1]
+
 
 def read_shrinkwrap(filename):
     with open(filename, 'r') as f:
         try:
             s = json.load(f)
         except ValueError as e:
-            raise NodeToolsException("Could not read shrinkwrap %s: %s" % (filename, e))
+            raise NodeToolsException(
+                    "Could not read shrinkwrap %s: %s" % (filename, e)
+                    )
         return s
+
 
 def get_npm_registry_url(module_id):
     # type: (str) -> str
@@ -46,12 +54,17 @@ def get_npm_registry_url(module_id):
     dep_name_last_part_only = dep_name.split('/')[-1]
     dep_version = get_dep_version(module_id)
 
-    return '{npm_registry_url}/{dep_name}/-/{dep_name_last_part_only}-{dep_version}.tgz'.format(
+    tmplStr = """
+    {npm_registry_url}/{dep_name}/-/{dep_name_last_part_only}-{dep_version}.tgz
+    """
+
+    return tmplStr.format(
         npm_registry_url=PUBLIC_NPM_REGISTRY_URL,
         dep_name=dep_name,
         dep_name_last_part_only=dep_name_last_part_only,
         dep_version=dep_version,
     )
+
 
 def run_npm(cmd, env=None, cwd=None):
     '''

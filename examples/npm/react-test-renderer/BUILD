@@ -8,6 +8,7 @@ npm_library(
     name = 'react-test-renderer',
     npm_req = 'react-test-renderer@15.5.3',
     shrinkwrap = 'npm-shrinkwrap.json',
+    no_import_main_test = True,
     contents = [
         'react-test-renderer/LICENSE',
         'react-test-renderer/PATENTS',

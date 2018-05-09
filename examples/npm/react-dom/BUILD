@@ -8,6 +8,7 @@ npm_library(
     name = 'react-dom',
     npm_req = 'react-dom@15.6.2',
     shrinkwrap = 'npm-shrinkwrap.json',
+    no_import_main_test = True,
     contents = [
         'react-dom/LICENSE',
         'react-dom/README.md',

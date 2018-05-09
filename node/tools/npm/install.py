@@ -14,6 +14,7 @@ from node.tools.npm.utils import (
     SHRINKWRAP,
 )
 
+
 def npm_install(shrinkwrap_path, output):
     shutil.copyfile(shrinkwrap_path, os.path.join(output, SHRINKWRAP))
 

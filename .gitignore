@@ -4,3 +4,4 @@ bazel-out
 bazel-testlogs
 bazel-rules_node
 bazel-app
+bazel-wix_rules_node

@@ -27,6 +27,7 @@ node_library(
 
 mocha_test(
     name = 'mocha_test',
+    size = "small",
     srcs = glob([
         'src/**/*.spec.ts',
         'test/*.spec.ts',

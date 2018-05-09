@@ -1,10 +1,14 @@
 import os
 import sys
 
+
 class RunfilesError(Exception):
     pass
 
+
 _runfiles_dir = None
+
+
 def _get_runfiles_dir():
     if _runfiles_dir:
         return _runfiles_dir
@@ -16,6 +20,7 @@ def _get_runfiles_dir():
             return os.path.realpath('/'.join(path_parts[:i+2]))
 
     raise RunfilesError('Must be run in Bazel environment')
+
 
 def _validate_repo_path(repo_path):
     # type: (str) -> None
@@ -29,6 +34,7 @@ def _validate_repo_path(repo_path):
             raise RunfilesError('absolute Bazel path only - no relative paths',
                                 repo_path)
 
+
 # Return a full path to a resource referenced by the Bazel target path.
 def data_path(repo_path):
     # type: (str) -> str
@@ -37,5 +43,7 @@ def data_path(repo_path):
     runfiles_dir = _get_runfiles_dir()
 
     if repo_path.startswith('@'):
-        return os.path.normpath(os.path.join(runfiles_dir, '..', repo_path[1:]))
+        return os.path.normpath(
+                os.path.join(runfiles_dir, '..', repo_path[1:])
+                )
     return os.path.join(runfiles_dir, repo_path[2:])
